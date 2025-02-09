@@ -16,7 +16,7 @@
 
 const Footer = () => {
   return (
-    <div className="text-center text-sm text-gray-400 mb-4">
+    <div className="text-right text-sm text-gray-400 mb-4">
       <p>
         Built with <br />
         <a
