@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { useRef } from "react";
-import "./App.scss";
-import { LiveAPIProvider } from "./contexts/LiveAPIContext";
-import SidePanel from "./components/side-panel/SidePanel";
-import ControlTray from "./components/control-tray/ControlTray";
-import Footer from "./components/footer/Footer";
-import { Notes } from "./components/notes/Notes";
+import { useRef } from 'react';
+import './App.scss';
+import { LiveAPIProvider } from './contexts/LiveAPIContext';
+import SidePanel from './components/side-panel/SidePanel';
+import ControlTray from './components/control-tray/ControlTray';
+import Footer from './components/footer/Footer';
+import { Notes } from './components/notes/Notes';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
-if (typeof API_KEY !== "string") {
-  throw new Error("set VITE_GEMINI_API_KEY in .env");
+if (typeof API_KEY !== 'string') {
+  throw new Error('set VITE_GEMINI_API_KEY in .env');
 }
 
-const host = "generativelanguage.googleapis.com";
+const host = 'generativelanguage.googleapis.com';
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
 
 function App() {
@@ -35,10 +35,7 @@ function App() {
 
   return (
     <div className="App">
-      <LiveAPIProvider 
-        url={uri} 
-        apiKey={API_KEY}
-      >
+      <LiveAPIProvider url={uri} apiKey={API_KEY}>
         <div className="streaming-console">
           <SidePanel />
           <main>

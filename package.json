@@ -1,6 +1,7 @@
 {
   "name": "multimodal-live-api-web-console",
   "version": "0.1.0",
+  "type": "module",
   "dependencies": {
     "classnames": "^2.5.1",
     "dotenv-flow": "^4.1.0",
@@ -24,7 +25,11 @@
     "dev-https": "HTTPS=true vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "typecheck": "tsc --noEmit"
   },
   "browserslist": {
     "production": [
@@ -48,9 +53,18 @@
     "@types/node": "^16.18.119",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/react-router-dom": "^5.3.3",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@typescript-eslint/eslint-plugin": "^8.23.0",
+    "@typescript-eslint/parser": "^8.23.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.20.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.5.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
     "vite": "^6.1.0"

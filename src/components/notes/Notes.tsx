@@ -1,10 +1,10 @@
 /**
  * Component for managing notes using the Gemini API tools
  */
-import { useEffect, useState, useCallback } from "react";
-import { useLiveAPIContext } from "../../contexts/LiveAPIContext";
-import { ToolCall, ToolResponse } from "../../multimodal-live-types";
-import { toolObject, systemInstructionObject, SaveNoteArgs } from "../../lib/note-tools";
+import { useEffect, useState, useCallback } from 'react';
+import { useLiveAPIContext } from '../../contexts/LiveAPIContext';
+import { ToolCall, ToolResponse } from '../../multimodal-live-types';
+import { toolObject, systemInstructionObject, SaveNoteArgs } from '../../lib/note-tools';
 
 interface NoteItem {
   id: number;
@@ -21,11 +21,11 @@ export function Notes() {
   // Set up the configuration with our note tools
   useEffect(() => {
     setConfig({
-      model: "models/gemini-2.0-flash-exp",
+      model: 'models/gemini-2.0-flash-exp',
       generationConfig: {
-        responseModalities: "text",
+        responseModalities: 'audio',
         speechConfig: {
-          voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } },
+          voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } },
         },
       },
       systemInstruction: systemInstructionObject,
@@ -45,13 +45,11 @@ export function Notes() {
     }
   };
 
+  // Load notes from localStorage when component mounts
   useEffect(() => {
-    if (connected) {
-      // Fetch existing notes when connected
-      const savedNotes = JSON.parse(localStorage.getItem("notes") || "[]");
-      setNotes(savedNotes);
-    }
-  }, [connected]);
+    const savedNotes = JSON.parse(localStorage.getItem('notes') || '[]');
+    setNotes(savedNotes);
+  }, []);
 
   // Handle tool execution
   useEffect(() => {
@@ -60,8 +58,8 @@ export function Notes() {
         let response = { result: {} };
 
         switch (fCall.name) {
-          case "save_note": {
-            const notes: NoteItem[] = JSON.parse(localStorage.getItem("notes") || "[]");
+          case 'save_note': {
+            const notes: NoteItem[] = JSON.parse(localStorage.getItem('notes') || '[]');
             const args = fCall.args as SaveNoteArgs;
             const newNote: NoteItem = {
               id: Date.now(),
@@ -69,13 +67,13 @@ export function Notes() {
               timestamp: new Date().toISOString(),
             };
             notes.push(newNote);
-            localStorage.setItem("notes", JSON.stringify(notes));
+            localStorage.setItem('notes', JSON.stringify(notes));
             setNotes(notes);
-            response.result = { success: true, message: "Note saved successfully" };
+            response.result = { success: true, message: 'Note saved successfully' };
             break;
           }
-          case "get_notes": {
-            const notes: NoteItem[] = JSON.parse(localStorage.getItem("notes") || "[]");
+          case 'get_notes': {
+            const notes: NoteItem[] = JSON.parse(localStorage.getItem('notes') || '[]');
             setNotes(notes);
             response.result = { notes };
             break;
@@ -95,9 +93,9 @@ export function Notes() {
       client.sendToolResponse({ functionResponses });
     };
 
-    client.on("toolcall", onToolCall);
+    client.on('toolcall', onToolCall);
     return () => {
-      client.off("toolcall", onToolCall);
+      client.off('toolcall', onToolCall);
     };
   }, [client]);
 
@@ -108,16 +106,9 @@ export function Notes() {
         <div className="start-section">
           <h2>Chat with Memory</h2>
           <p>Start a conversation and I'll remember what you tell me to remember!</p>
-          <button 
-            onClick={handleStart} 
-            disabled={isStarting}
-            className="start-button"
-          >
-            {isStarting ? 'Starting...' : 'Start Conversation'}
-          </button>
         </div>
       )}
-      
+
       <h2>Stored Notes</h2>
       {notes.length === 0 ? (
         <p>No notes stored yet. Try asking me to remember something!</p>
@@ -128,7 +119,7 @@ export function Notes() {
               <div className="note-content" dangerouslySetInnerHTML={{ __html: note.content }} />
               <small className="note-timestamp">{new Date(note.timestamp).toLocaleString()}</small>
             </li>
-          ))}        
+          ))}
         </ul>
       )}
     </div>

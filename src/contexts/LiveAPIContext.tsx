@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { createContext, FC, ReactNode, useContext } from "react";
-import { useLiveAPI, UseLiveAPIResults } from "../hooks/use-live-api";
-import { LiveConfig } from "../multimodal-live-types";
+import { createContext, FC, ReactNode, useContext } from 'react';
+import { useLiveAPI, UseLiveAPIResults } from '../hooks/use-live-api';
+import { LiveConfig } from '../multimodal-live-types';
 
 const LiveAPIContext = createContext<UseLiveAPIResults | undefined>(undefined);
 
@@ -27,25 +27,16 @@ export type LiveAPIProviderProps = {
   config?: LiveConfig;
 };
 
-export const LiveAPIProvider: FC<LiveAPIProviderProps> = ({
-  url,
-  apiKey,
-  config,
-  children,
-}) => {
+export const LiveAPIProvider: FC<LiveAPIProviderProps> = ({ url, apiKey, config, children }) => {
   const liveAPI = useLiveAPI({ url, apiKey, config });
 
-  return (
-    <LiveAPIContext.Provider value={liveAPI}>
-      {children}
-    </LiveAPIContext.Provider>
-  );
+  return <LiveAPIContext.Provider value={liveAPI}>{children}</LiveAPIContext.Provider>;
 };
 
 export const useLiveAPIContext = () => {
   const context = useContext(LiveAPIContext);
   if (!context) {
-    throw new Error("useLiveAPIContext must be used wihin a LiveAPIProvider");
+    throw new Error('useLiveAPIContext must be used wihin a LiveAPIProvider');
   }
   return context;
 };

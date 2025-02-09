@@ -13,39 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { type FunctionDeclaration, SchemaType } from "@google/generative-ai";
-import { useEffect, useRef, useState, memo } from "react";
-import vegaEmbed from "vega-embed";
-import { useLiveAPIContext } from "../../contexts/LiveAPIContext";
-import { ToolCall } from "../../multimodal-live-types";
+import { type FunctionDeclaration, SchemaType } from '@google/generative-ai';
+import { useEffect, useRef, useState, memo } from 'react';
+import vegaEmbed from 'vega-embed';
+import { useLiveAPIContext } from '../../contexts/LiveAPIContext';
+import { ToolCall } from '../../multimodal-live-types';
 
 const declaration: FunctionDeclaration = {
-  name: "render_altair",
-  description: "Displays an altair graph in json format.",
+  name: 'render_altair',
+  description: 'Displays an altair graph in json format.',
   parameters: {
     type: SchemaType.OBJECT,
     properties: {
       json_graph: {
         type: SchemaType.STRING,
         description:
-          "JSON STRING representation of the graph to render. Must be a string, not a json object",
+          'JSON STRING representation of the graph to render. Must be a string, not a json object',
       },
     },
-    required: ["json_graph"],
+    required: ['json_graph'],
   },
 };
 
 function AltairComponent() {
-  const [jsonString, setJSONString] = useState<string>("");
+  const [jsonString, setJSONString] = useState<string>('');
   const { client, setConfig } = useLiveAPIContext();
 
   useEffect(() => {
     setConfig({
-      model: "models/gemini-2.0-flash-exp",
+      model: 'models/gemini-2.0-flash-exp',
       generationConfig: {
-        responseModalities: "audio",
+        responseModalities: 'audio',
         speechConfig: {
-          voiceConfig: { prebuiltVoiceConfig: { voiceName: "Aoede" } },
+          voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Aoede' } },
         },
       },
       systemInstruction: {
@@ -66,9 +66,7 @@ function AltairComponent() {
   useEffect(() => {
     const onToolCall = (toolCall: ToolCall) => {
       console.log(`got toolcall`, toolCall);
-      const fc = toolCall.functionCalls.find(
-        (fc) => fc.name === declaration.name,
-      );
+      const fc = toolCall.functionCalls.find((fc) => fc.name === declaration.name);
       if (fc) {
         const str = (fc.args as any).json_graph;
         setJSONString(str);
@@ -84,13 +82,13 @@ function AltairComponent() {
                 id: fc.id,
               })),
             }),
-          200,
+          200
         );
       }
     };
-    client.on("toolcall", onToolCall);
+    client.on('toolcall', onToolCall);
     return () => {
-      client.off("toolcall", onToolCall);
+      client.off('toolcall', onToolCall);
     };
   }, [client]);
 

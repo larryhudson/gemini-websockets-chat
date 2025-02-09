@@ -24,17 +24,9 @@ interface TopicChipProps {
   onClick?: () => void;
 }
 
-export const TopicChip: React.FC<TopicChipProps> = ({
-  emoji,
-  label,
-  isSelected,
-  onClick
-}) => (
-  <button 
-    className={`topic-chip ${isSelected ? 'selected' : ''}`}
-    onClick={onClick}
-  >
+export const TopicChip: React.FC<TopicChipProps> = ({ emoji, label, isSelected, onClick }) => (
+  <button className={`topic-chip ${isSelected ? 'selected' : ''}`} onClick={onClick}>
     <span className="emoji">{emoji}</span>
     <span className="label">{label}</span>
   </button>
-); 
+);
