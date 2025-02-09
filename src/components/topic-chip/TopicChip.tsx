@@ -16,7 +16,6 @@
 
 import React from 'react';
 
-
 interface TopicChipProps {
   emoji: string;
   label: string;
@@ -25,8 +24,8 @@ interface TopicChipProps {
 }
 
 export const TopicChip: React.FC<TopicChipProps> = ({ emoji, label, isSelected, onClick }) => (
-  <button 
-    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${isSelected ? 'bg-blue-700 text-blue-400' : 'bg-neutral-15 text-gray-300 hover:bg-neutral-20'}`} 
+  <button
+    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${isSelected ? 'bg-blue-700 text-blue-400' : 'bg-neutral-15 text-gray-300 hover:bg-neutral-20'}`}
     onClick={onClick}
   >
     <span className="text-lg">{emoji}</span>

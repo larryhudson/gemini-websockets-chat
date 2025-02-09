@@ -16,7 +16,7 @@ const targetUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generati
 // Create a proxy instance
 const proxy = httpProxy.createProxyServer({
   changeOrigin: true,
-  ws: true
+  ws: true,
 });
 
 // Create an HTTP server
@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
   console.log('HTTP Request:', {
     url: req.url,
     method: req.method,
-    headers: req.headers
+    headers: req.headers,
   });
   res.writeHead(404);
   res.end('Not found');
@@ -35,14 +35,14 @@ server.on('upgrade', (req, socket, head) => {
   console.log('Upgrade Request:', {
     url: req.url,
     headers: req.headers,
-    target: targetUrl
+    target: targetUrl,
   });
 
   if (req.url === '/ws') {
     proxy.ws(req, socket, head, {
       target: targetUrl,
-      ignorePath: true // Prevent appending the source path
-    })
+      ignorePath: true, // Prevent appending the source path
+    });
   } else {
     console.log('Non-ws upgrade request, destroying socket');
     socket.destroy();
@@ -56,7 +56,7 @@ proxy.on('proxyReqWs', (proxyReq, req, socket, options, head) => {
     proxyReqHeaders: proxyReq.getHeaders(),
     originalUrl: req.url,
     originalHeaders: req.headers,
-    targetOptions: options
+    targetOptions: options,
   });
 });
 
@@ -66,11 +66,11 @@ proxy.on('error', (err, req, res) => {
     error: err.message,
     stack: err.stack,
     reqUrl: req.url,
-    reqHeaders: req.headers
+    reqHeaders: req.headers,
   });
   if (res.writeHead) {
     res.writeHead(500, {
-      'Content-Type': 'text/plain'
+      'Content-Type': 'text/plain',
     });
     res.end('Proxy error');
   }
@@ -81,7 +81,7 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
   console.log('Proxy Response:', {
     statusCode: proxyRes.statusCode,
     headers: proxyRes.headers,
-    originalUrl: req.url
+    originalUrl: req.url,
   });
 });
 
@@ -89,7 +89,7 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 proxy.on('close', (req, socket, head) => {
   console.log('WebSocket Connection Closed:', {
     reqUrl: req?.url,
-    socketConnected: socket?.connected
+    socketConnected: socket?.connected,
   });
 });
 

@@ -3,6 +3,7 @@
 ## Build Process
 
 ### 1. Build the Application
+
 ```bash
 # Install dependencies
 npm install
@@ -12,12 +13,14 @@ npm run build:all
 ```
 
 This will create:
+
 - `dist/client/` - Contains the built frontend application
 - `dist/server/` - Contains the compiled proxy server
 
 ## Environment Setup
 
 1. Create a production `.env` file:
+
 ```env
 # Server-side API key (used by the proxy server)
 GOOGLE_API_KEY=your_api_key_here
@@ -29,6 +32,7 @@ PORT=3000  # Optional, defaults to 3000
 ### Option 1: PM2 Deployment (Recommended)
 
 1. Install PM2 globally on your production server:
+
    ```bash
    npm install -g pm2
    ```
@@ -38,6 +42,7 @@ PORT=3000  # Optional, defaults to 3000
 3. Set up your `.env` file with production values
 
 4. Install production dependencies:
+
    ```bash
    npm install --production
    ```
@@ -45,6 +50,7 @@ PORT=3000  # Optional, defaults to 3000
 5. The PM2 ecosystem file (`ecosystem.config.js`) is included in the repository. It contains the necessary configuration for running the application with PM2.
 
 6. Start the application with PM2:
+
    ```bash
    # Start the WebSocket proxy server
    pm2 start ecosystem.config.js
@@ -57,6 +63,7 @@ PORT=3000  # Optional, defaults to 3000
    ```
 
 7. Useful PM2 commands:
+
    ```bash
    # View logs
    pm2 logs multimodal-ws-proxy
@@ -90,6 +97,7 @@ PORT=3000  # Optional, defaults to 3000
 ### Option 3: Docker Deployment
 
 1. Create a Dockerfile:
+
 ```dockerfile
 FROM node:18-alpine
 
@@ -115,6 +123,7 @@ CMD ["npm", "start"]
 ```
 
 2. Build and run the Docker container:
+
 ```bash
 docker build -t multimodal-live-api .
 docker run -p 3000:3000 multimodal-live-api
@@ -134,6 +143,7 @@ An example Nginx configuration file is provided in the repository as `nginx.conf
 ### Setting up Nginx
 
 1. Install Nginx if not already installed:
+
    ```bash
    # Ubuntu/Debian
    sudo apt update
@@ -145,6 +155,7 @@ An example Nginx configuration file is provided in the repository as `nginx.conf
    ```
 
 2. Copy and customize the Nginx configuration:
+
    ```bash
    # Copy the example config
    sudo cp nginx.conf.example /etc/nginx/sites-available/multimodal-api
@@ -154,12 +165,14 @@ An example Nginx configuration file is provided in the repository as `nginx.conf
    ```
 
 3. Update the following in the configuration:
+
    - `server_name` with your domain
    - `root` path to point to your built client files
    - SSL certificate paths (if using HTTPS)
    - Log file paths if needed
 
 4. Enable the site and restart Nginx:
+
    ```bash
    # Create symlink to enable the site
    sudo ln -s /etc/nginx/sites-available/multimodal-api /etc/nginx/sites-enabled/
@@ -188,7 +201,9 @@ An example Nginx configuration file is provided in the repository as `nginx.conf
 ## Monitoring
 
 ### PM2 Monitoring
+
 When using PM2, you get several monitoring features out of the box:
+
 1. Process monitoring: `pm2 monit`
 2. Log management: `pm2 logs`
 3. Metrics dashboard: `pm2 plus` (requires PM2 Plus account)
@@ -196,7 +211,9 @@ When using PM2, you get several monitoring features out of the box:
 5. Exception logging
 
 ### Additional Monitoring
+
 Consider setting up:
+
 1. Server monitoring (CPU, memory, disk usage)
 2. Application logging (e.g., Winston, Bunyan)
 3. Error tracking (e.g., Sentry)
@@ -207,6 +224,7 @@ Consider setting up:
 ## Scaling
 
 For higher traffic:
+
 1. Use a load balancer
 2. Set up multiple proxy server instances
 3. Implement WebSocket sticky sessions
@@ -215,6 +233,7 @@ For higher traffic:
 ## Troubleshooting
 
 Common issues and solutions:
+
 1. WebSocket connection failures
    - Check Nginx configuration
    - Verify SSL/TLS setup

@@ -39,12 +39,7 @@ function App() {
             </div>
             <div className="flex flex-col justify-end min-h-[8rem]">
               <Footer />
-              <video
-                ref={videoRef}
-                className="hidden"
-                autoPlay
-                playsInline
-              />
+              <video ref={videoRef} className="hidden" autoPlay playsInline />
               <ControlTray videoRef={videoRef} supportsVideo={true}>
                 {/* put your own buttons here */}
               </ControlTray>

@@ -169,10 +169,13 @@ function ControlTray({
           })}
         >
           <button
-            className={cn('w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-full transition-colors', {
-              'bg-blue-700 text-blue-400 hover:bg-blue-800': !muted,
-              'bg-neutral-15 text-gray-300 hover:bg-neutral-20': muted,
-            })}
+            className={cn(
+              'w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-full transition-colors',
+              {
+                'bg-blue-700 text-blue-400 hover:bg-blue-800': !muted,
+                'bg-neutral-15 text-gray-300 hover:bg-neutral-20': muted,
+              }
+            )}
             onClick={() => setMuted(!muted)}
           >
             <span className="material-symbols-outlined filled">{!muted ? 'mic' : 'mic_off'}</span>
@@ -206,10 +209,13 @@ function ControlTray({
         <div className="flex items-center gap-4">
           <button
             ref={connectButtonRef}
-            className={cn('w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-full transition-colors', {
-              'bg-blue-700 text-blue-400 hover:bg-blue-800': connected,
-              'bg-neutral-15 text-gray-300 hover:bg-neutral-20': !connected,
-            })}
+            className={cn(
+              'w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-full transition-colors',
+              {
+                'bg-blue-700 text-blue-400 hover:bg-blue-800': connected,
+                'bg-neutral-15 text-gray-300 hover:bg-neutral-20': !connected,
+              }
+            )}
             onClick={connected ? disconnect : connect}
           >
             <span className="material-symbols-outlined filled">
