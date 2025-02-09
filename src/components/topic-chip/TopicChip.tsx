@@ -14,12 +14,27 @@
  * limitations under the License.
  */
 
+import React from 'react';
+import './topic-chip.scss';
 
-import { render, screen } from '@testing-library/react';
-import App from './App';
+interface TopicChipProps {
+  emoji: string;
+  label: string;
+  isSelected?: boolean;
+  onClick?: () => void;
+}
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+export const TopicChip: React.FC<TopicChipProps> = ({
+  emoji,
+  label,
+  isSelected,
+  onClick
+}) => (
+  <button 
+    className={`topic-chip ${isSelected ? 'selected' : ''}`}
+    onClick={onClick}
+  >
+    <span className="emoji">{emoji}</span>
+    <span className="label">{label}</span>
+  </button>
+); 

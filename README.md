@@ -1,6 +1,6 @@
 # Multimodal Live API - Web console
 
-This repository contains a react-based starter app for using the [Multimodal Live API](<[https://ai.google.dev/gemini-api](https://ai.google.dev/api/multimodal-live)>) over a websocket. It provides modules for streaming audio playback, recording user media such as from a microphone, webcam or screen capture as well as a unified log view to aid in development of your application.
+This repository contains a react-based starter app for using the [Multimodal Live API](https://ai.google.dev/api/multimodal-live) over a websocket. It provides modules for streaming audio playback, recording user media such as from a microphone, webcam or screen capture as well as a unified log view to aid in development of your application.
 
 [![Multimodal Live API Demo](readme/thumbnail.png)](https://www.youtube.com/watch?v=J_q7JY1XxFE)
 
@@ -10,11 +10,21 @@ Watch the demo of the Multimodal Live API [here](https://www.youtube.com/watch?v
 
 To get started, [create a free Gemini API key](https://aistudio.google.com/apikey) and add it to the `.env` file. Then:
 
-```
-$ npm install && npm start
+```bash
+# Install dependencies
+$ npm install
+
+# Start development server
+$ npm run dev
 ```
 
-We have provided several example applications on other branches of this repository:
+[![GenExplainer Demo](readme/thumbnail.png)](https://www.youtube.com/watch?v=J62TUCRapR8)
+
+Watch the demo of the GenExplainer [here](https://www.youtube.com/watch?v=J62TUCRapR8).
+
+---
+
+To get started, [create a free Gemini API key](https://aistudio.google.com/apikey). We have provided several example applications on other branches of this repository:
 
 - [demos/GenExplainer](https://github.com/google-gemini/multimodal-live-api-web-console/tree/demos/genexplainer)
 - [demos/GenWeather](https://github.com/google-gemini/multimodal-live-api-web-console/tree/demos/genweather)
@@ -74,11 +84,21 @@ export function Altair() {
         const str = (fc.args as any).json_graph;
         setJSONString(str);
       }
+<<<<<<< HEAD
     };
     client.on("toolcall", onToolCall);
     return () => {
       client.off("toolcall", onToolCall);
     };
+||||||| 630a033
+    });
+=======
+    };
+    client.on("toolcall", onToolCall);
+    return () => {
+        client.off("toolcall", onToolCall);
+    };
+>>>>>>> migrate-to-vite
   }, [client]);
 
   const embedRef = useRef<HTMLDivElement>(null);
