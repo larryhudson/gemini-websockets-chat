@@ -101,27 +101,42 @@ export function Notes() {
 
   // Display the notes
   return (
-    <div className="notes">
+    <div className="max-w-2xl mx-auto px-6 py-8 space-y-8">
       {!connected && (
-        <div className="start-section">
-          <h2>Chat with Memory</h2>
-          <p>Start a conversation and I'll remember what you tell me to remember!</p>
+        <div className="space-y-4 text-center bg-neutral-10 rounded-lg p-6">
+          <h2 className="text-2xl font-bold text-gray-200">Chat with Memory</h2>
+          <p className="text-gray-400">
+            Start a conversation and I'll remember what you tell me to remember!
+          </p>
         </div>
       )}
 
-      <h2>Stored Notes</h2>
-      {notes.length === 0 ? (
-        <p>No notes stored yet. Try asking me to remember something!</p>
-      ) : (
-        <ul className="notes-list">
-          {notes.map((note) => (
-            <li key={note.id} className="note-item">
-              <div className="note-content" dangerouslySetInnerHTML={{ __html: note.content }} />
-              <small className="note-timestamp">{new Date(note.timestamp).toLocaleString()}</small>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-gray-300">Stored Notes</h2>
+        {notes.length === 0 ? (
+          <p className="text-gray-400 italic">
+            No notes stored yet. Try asking me to remember something!
+          </p>
+        ) : (
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-b from-neutral-5 to-transparent h-4 pointer-events-none" />
+            <ul className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 -mr-2 scroll-smooth">
+              {notes.map((note) => (
+                <li key={note.id} className="bg-neutral-10 rounded-lg p-4 space-y-2">
+                  <div
+                    className="prose prose-invert prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: note.content }}
+                  />
+                  <time className="block text-xs text-gray-500">
+                    {new Date(note.timestamp).toLocaleString()}
+                  </time>
+                </li>
+              ))}
+            </ul>
+            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-neutral-5 to-transparent h-4 pointer-events-none" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

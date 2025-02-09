@@ -23,7 +23,7 @@ import { useScreenCapture } from '../../hooks/use-screen-capture';
 import { useWebcam } from '../../hooks/use-webcam';
 import { AudioRecorder } from '../../lib/audio-recorder';
 import AudioPulse from '../audio-pulse/AudioPulse';
-import './control-tray.scss';
+
 
 export type ControlTrayProps = {
   videoRef: RefObject<HTMLVideoElement>;
@@ -46,11 +46,17 @@ type MediaStreamButtonProps = {
 const MediaStreamButton = memo(
   ({ isStreaming, onIcon, offIcon, start, stop }: MediaStreamButtonProps) =>
     isStreaming ? (
-      <button className="action-button" onClick={stop}>
+      <button 
+        className="p-2 rounded-full bg-neutral-15 hover:bg-neutral-20 text-gray-300 transition-colors" 
+        onClick={stop}
+      >
         <span className="material-symbols-outlined">{onIcon}</span>
       </button>
     ) : (
-      <button className="action-button" onClick={start}>
+      <button 
+        className="p-2 rounded-full bg-neutral-15 hover:bg-neutral-20 text-gray-300 transition-colors" 
+        onClick={start}
+      >
         <span className="material-symbols-outlined">{offIcon}</span>
       </button>
     )
@@ -155,56 +161,64 @@ function ControlTray({
   };
 
   return (
-    <section className="control-tray">
-      <canvas style={{ display: 'none' }} ref={renderCanvasRef} />
-      <nav className={cn('actions-nav', { disabled: !connected })}>
-        <button className={cn('action-button mic-button')} onClick={() => setMuted(!muted)}>
-          {!muted ? (
-            <span className="material-symbols-outlined filled">mic</span>
-          ) : (
-            <span className="material-symbols-outlined filled">mic_off</span>
+    <section className="border-t border-gray-600 bg-neutral-5">
+      <canvas className="hidden" ref={renderCanvasRef} />
+      <div className="flex items-center justify-between p-4">
+        <nav className={cn('flex items-center gap-4', { 'opacity-50 pointer-events-none': !connected })}>
+          <button 
+            className={cn('p-2 rounded-full transition-colors', {
+              'bg-blue-700 text-blue-400 hover:bg-blue-800': !muted,
+              'bg-neutral-15 text-gray-300 hover:bg-neutral-20': muted
+            })} 
+            onClick={() => setMuted(!muted)}
+          >
+            <span className="material-symbols-outlined filled">
+              {!muted ? 'mic' : 'mic_off'}
+            </span>
+          </button>
+
+          <div className="p-2 rounded-full bg-neutral-15 text-gray-300">
+            <AudioPulse volume={volume} active={connected} hover={false} />
+          </div>
+
+          {supportsVideo && (
+            <>
+              <MediaStreamButton
+                isStreaming={screenCapture.isStreaming}
+                start={changeStreams(screenCapture)}
+                stop={changeStreams()}
+                onIcon="cancel_presentation"
+                offIcon="present_to_all"
+              />
+              <MediaStreamButton
+                isStreaming={webcam.isStreaming}
+                start={changeStreams(webcam)}
+                stop={changeStreams()}
+                onIcon="videocam_off"
+                offIcon="videocam"
+              />
+            </>
           )}
-        </button>
+          {children}
+        </nav>
 
-        <div className="action-button no-action outlined">
-          <AudioPulse volume={volume} active={connected} hover={false} />
-        </div>
-
-        {supportsVideo && (
-          <>
-            <MediaStreamButton
-              isStreaming={screenCapture.isStreaming}
-              start={changeStreams(screenCapture)}
-              stop={changeStreams()}
-              onIcon="cancel_presentation"
-              offIcon="present_to_all"
-            />
-            <MediaStreamButton
-              isStreaming={webcam.isStreaming}
-              start={changeStreams(webcam)}
-              stop={changeStreams()}
-              onIcon="videocam_off"
-              offIcon="videocam"
-            />
-          </>
-        )}
-        {children}
-      </nav>
-
-      <div className={cn('connection-container', { connected })}>
-        <div className="connection-button-container">
+        <div className="flex items-center gap-4">
           <button
             ref={connectButtonRef}
-            className={cn('action-button connect-toggle', { connected })}
+            className={cn('p-2 rounded-full transition-colors', {
+              'bg-blue-700 text-blue-400 hover:bg-blue-800': connected,
+              'bg-neutral-15 text-gray-300 hover:bg-neutral-20': !connected
+            })}
             onClick={connected ? disconnect : connect}
-            // The connect button can be used to start/stop the conversation
           >
             <span className="material-symbols-outlined filled">
               {connected ? 'pause' : 'play_arrow'}
             </span>
           </button>
+          {connected && (
+            <span className="text-gray-300">Streaming</span>
+          )}
         </div>
-        <span className="text-indicator">Streaming</span>
       </div>
     </section>
   );

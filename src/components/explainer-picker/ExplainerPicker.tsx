@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { TopicChip } from '../topic-chip/TopicChip';
-import './explainer-picker.scss';
+
 import { useLiveAPIContext } from '../../contexts/LiveAPIContext';
 
 const EXPLAINER_TOPICS = [
@@ -85,12 +85,12 @@ const ExplainerPicker: React.FC = () => {
   };
 
   return (
-    <div className="explainer-picker">
-      <h1 className="title">GenExplainer</h1>
+    <div className="max-w-4xl mx-auto p-8 flex flex-col gap-8">
+      <h1 className="text-4xl font-bold text-gray-200 text-center">GenExplainer</h1>
 
-      <div className="section">
-        <h2 className="section-label">Explain:</h2>
-        <div className="chips-container">
+      <div className="flex flex-col gap-4">
+        <h2 className="text-xl font-bold text-gray-300">Explain:</h2>
+        <div className="flex flex-wrap gap-3">
           {EXPLAINER_TOPICS.map((topic, index) => (
             <TopicChip
               key={index}
@@ -102,9 +102,9 @@ const ExplainerPicker: React.FC = () => {
         </div>
       </div>
 
-      <div className="section">
-        <h2 className="section-label">In the style of:</h2>
-        <div className="chips-container">
+      <div className="flex flex-col gap-4">
+        <h2 className="text-xl font-bold text-gray-300">In the style of:</h2>
+        <div className="flex flex-wrap gap-3">
           {EXPLANATION_STYLES.map((style, index) => (
             <TopicChip
               key={index}
@@ -117,11 +117,11 @@ const ExplainerPicker: React.FC = () => {
       </div>
 
       <button
-        className={`start-button ${!connected && selectedTopic && selectedStyle ? 'enabled' : 'disabled'}`}
+        className={`flex items-center justify-center gap-2 px-6 py-3 rounded-full text-lg font-bold transition-colors ${!connected && selectedTopic && selectedStyle ? 'bg-blue-700 text-blue-400 hover:bg-blue-800' : 'bg-neutral-15 text-gray-300 cursor-not-allowed'}`}
         onClick={handleStart}
         disabled={connected || !selectedTopic || !selectedStyle}
       >
-        <span className="emoji">🔊</span> {connected ? 'Streaming...' : 'Start talking'}
+        <span className="text-2xl">🔊</span> {connected ? 'Streaming...' : 'Start talking'}
       </button>
     </div>
   );

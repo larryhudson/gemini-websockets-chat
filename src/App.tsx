@@ -15,7 +15,7 @@
  */
 
 import { useRef } from 'react';
-import './App.scss';
+import './index.css';
 import { LiveAPIProvider } from './contexts/LiveAPIContext';
 import SidePanel from './components/side-panel/SidePanel';
 import ControlTray from './components/control-tray/ControlTray';
@@ -34,25 +34,27 @@ function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   return (
-    <div className="App">
+    <div className="font-space-mono">
       <LiveAPIProvider url={uri} apiKey={API_KEY}>
-        <div className="streaming-console">
+        <div className="flex h-screen bg-neutral-5 text-gray-300">
           <SidePanel />
-          <main>
-            <div className="main-app-area">
+          <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex items-center justify-center">
               <Notes />
-              <Footer />
             </div>
-            <video
-              ref={videoRef}
-              style={{ display: 'none' }}
-              autoPlay
-              playsInline
-            />
-            <ControlTray videoRef={videoRef} supportsVideo={true}>
-              {/* put your own buttons here */}
-            </ControlTray>
-          </main>
+            <div className="flex flex-col justify-end min-h-[8rem]">
+              <Footer />
+              <video
+                ref={videoRef}
+                className="hidden"
+                autoPlay
+                playsInline
+              />
+              <ControlTray videoRef={videoRef} supportsVideo={true}>
+                {/* put your own buttons here */}
+              </ControlTray>
+            </div>
+          </div>
         </div>
       </LiveAPIProvider>
     </div>

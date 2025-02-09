@@ -21,7 +21,7 @@ import Select from 'react-select';
 import { useLiveAPIContext } from '../../contexts/LiveAPIContext';
 import { useLoggerStore } from '../../lib/store-logger';
 import Logger, { LoggerFilterType } from '../logger/Logger';
-import './side-panel.scss';
+
 
 const filterOptions = [
   { value: 'conversations', label: 'Conversations' },
@@ -73,38 +73,48 @@ export default function SidePanel() {
   };
 
   return (
-    <div className={`side-panel ${open ? 'open' : ''}`}>
-      <header className="top">
-        <h2>Console</h2>
+    <div className={cn('flex flex-col h-screen bg-neutral-5 border-l border-gray-600 transition-all duration-300', {
+        'w-96': open,
+        'w-16': !open
+      })}>
+      <header className="flex items-center justify-between p-4 border-b border-gray-600">
+        <h2 className="text-gray-200 font-bold">{open ? 'Console' : ''}</h2>
         {open ? (
-          <button className="opener" onClick={() => setOpen(false)}>
-            <RiSidebarFoldLine color="#b4b8bb" />
+          <button 
+            className="p-2 rounded hover:bg-neutral-15 transition-colors" 
+            onClick={() => setOpen(false)}
+          >
+            <RiSidebarFoldLine className="text-gray-200" />
           </button>
         ) : (
-          <button className="opener" onClick={() => setOpen(true)}>
-            <RiSidebarUnfoldLine color="#b4b8bb" />
+          <button 
+            className="p-2 rounded hover:bg-neutral-15 transition-colors" 
+            onClick={() => setOpen(true)}
+          >
+            <RiSidebarUnfoldLine className="text-gray-200" />
           </button>
         )}
       </header>
-      <section className="indicators">
+      <section className="flex items-center gap-2 p-4 border-b border-gray-600">
         <Select
-          className="react-select"
+          className="flex-1"
           classNamePrefix="react-select"
           styles={{
             control: (baseStyles) => ({
               ...baseStyles,
-              background: 'var(--Neutral-15)',
-              color: 'var(--Neutral-90)',
+              background: 'var(--color-neutral-15)',
+              color: 'var(--color-neutral-90)',
               minHeight: '33px',
               maxHeight: '33px',
               border: 0,
+              borderRadius: '0.375rem',
             }),
             option: (styles, { isFocused, isSelected }) => ({
               ...styles,
               backgroundColor: isFocused
-                ? 'var(--Neutral-30)'
+                ? 'var(--color-neutral-30)'
                 : isSelected
-                  ? 'var(--Neutral-20)'
+                  ? 'var(--color-neutral-20)'
                   : undefined,
             }),
           }}
@@ -114,17 +124,20 @@ export default function SidePanel() {
             setSelectedOption(e);
           }}
         />
-        <div className={cn('streaming-indicator', { connected })}>
+        <div className={cn('px-2 py-1 rounded text-sm', {
+          'bg-blue-700 text-blue-400': connected,
+          'bg-neutral-30 text-gray-300': !connected
+        })}>
           {connected ? `🔵${open ? ' Streaming' : ''}` : `⏸️${open ? ' Paused' : ''}`}
         </div>
       </section>
-      <div className="side-panel-container" ref={loggerRef}>
+      <div className="flex-1 overflow-y-auto" ref={loggerRef}>
         <Logger filter={(selectedOption?.value as LoggerFilterType) || 'none'} />
       </div>
-      <div className={cn('input-container', { disabled: !connected })}>
-        <div className="input-content">
+      <div className={cn('p-4 border-t border-gray-600', { 'opacity-50 pointer-events-none': !connected })}>
+        <div className="relative bg-neutral-15 rounded-lg">
           <textarea
-            className="input-area"
+            className="w-full min-h-[100px] p-3 bg-transparent text-gray-200 resize-none focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-lg"
             ref={inputRef}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
@@ -135,16 +148,17 @@ export default function SidePanel() {
             }}
             onChange={(e) => setTextInput(e.target.value)}
             value={textInput}
+            placeholder="Type something..."
           ></textarea>
-          <span
-            className={cn('input-content-placeholder', {
-              hidden: textInput.length,
-            })}
-          >
-            Type&nbsp;something...
-          </span>
 
-          <button className="send-button material-symbols-outlined filled" onClick={handleSubmit}>
+          <button 
+            className={cn('absolute bottom-3 right-3 p-2 rounded-full transition-colors material-symbols-outlined filled', {
+              'bg-blue-700 text-blue-400 hover:bg-blue-800': textInput.length,
+              'bg-neutral-30 text-gray-300': !textInput.length
+            })} 
+            onClick={handleSubmit}
+            disabled={!textInput.length}
+          >
             send
           </button>
         </div>
