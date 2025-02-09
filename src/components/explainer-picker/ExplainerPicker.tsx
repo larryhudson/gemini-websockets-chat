@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TopicChip } from '../topic-chip/TopicChip';
 import './explainer-picker.scss';
 import { useLiveAPIContext } from '../../contexts/LiveAPIContext';

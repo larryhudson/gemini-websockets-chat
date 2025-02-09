@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import "./App.scss";
 import { LiveAPIProvider } from "./contexts/LiveAPIContext";
 import SidePanel from "./components/side-panel/SidePanel";
@@ -22,9 +22,9 @@ import ControlTray from "./components/control-tray/ControlTray";
 import ExplainerPicker from "./components/explainer-picker/ExplainerPicker";
 import Footer from "./components/footer/Footer";
 
-const API_KEY = process.env.REACT_APP_GEMINI_API_KEY as string;
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
 if (typeof API_KEY !== "string") {
-  throw new Error("set REACT_APP_GEMINI_API_KEY in .env");
+  throw new Error("set VITE_GEMINI_API_KEY in .env");
 }
 
 const host = "generativelanguage.googleapis.com";
