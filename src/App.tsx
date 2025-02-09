@@ -21,6 +21,7 @@ import SidePanel from "./components/side-panel/SidePanel";
 import ControlTray from "./components/control-tray/ControlTray";
 import ExplainerPicker from "./components/explainer-picker/ExplainerPicker";
 import Footer from "./components/footer/Footer";
+import { noteTools } from "./lib/note-tools";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
 if (typeof API_KEY !== "string") {
@@ -35,7 +36,14 @@ function App() {
 
   return (
     <div className="App">
-      <LiveAPIProvider url={uri} apiKey={API_KEY}>
+      <LiveAPIProvider 
+        url={uri} 
+        apiKey={API_KEY} 
+        config={{
+          model: "models/gemini-2.0-flash-exp",
+          tools: [noteTools.saveNote, noteTools.getNotes]
+        }}
+      >
         <div className="streaming-console">
           <SidePanel />
           <main>

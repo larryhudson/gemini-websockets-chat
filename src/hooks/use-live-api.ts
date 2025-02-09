@@ -37,7 +37,8 @@ export type UseLiveAPIResults = {
 export function useLiveAPI({
   url,
   apiKey,
-}: MultimodalLiveAPIClientConnection): UseLiveAPIResults {
+  config: initialConfig,
+}: MultimodalLiveAPIClientConnection & { config?: LiveConfig }): UseLiveAPIResults {
   const client = useMemo(
     () => new MultimodalLiveClient({ url, apiKey }),
     [url, apiKey],
@@ -45,7 +46,7 @@ export function useLiveAPI({
   const audioStreamerRef = useRef<AudioStreamer | null>(null);
 
   const [connected, setConnected] = useState(false);
-  const [config, setConfig] = useState<LiveConfig>({
+  const [config, setConfig] = useState<LiveConfig>(initialConfig || {
     model: "models/gemini-2.0-flash-exp",
   });
   const [volume, setVolume] = useState(0);

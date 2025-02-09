@@ -23,14 +23,16 @@ export type LiveAPIProviderProps = {
   children: ReactNode;
   url?: string;
   apiKey: string;
+  config?: LiveConfig;
 };
 
 export const LiveAPIProvider: FC<LiveAPIProviderProps> = ({
   url,
   apiKey,
+  config,
   children,
 }) => {
-  const liveAPI = useLiveAPI({ url, apiKey });
+  const liveAPI = useLiveAPI({ url, apiKey, config });
 
   return (
     <LiveAPIContext.Provider value={liveAPI}>
