@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+@keyframes hover {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-3.5px);
+  }
+}
+
+@keyframes pulse {
+  from {
+    scale: 1 1;
+  }
+  to {
+    scale: 1.2 1.2;
+  }
+}
+
 @theme {
   /* Colors */
   --color-neutral-0: #000;
@@ -75,6 +93,10 @@
 }
 
 /* Custom utilities */
+@utility animate-hover {
+  animation: hover 1.4s infinite alternate ease-in-out;
+}
+
 @utility space-mono-regular {
   font-family: var(--font-system);
   font-weight: 400;
