@@ -41,7 +41,7 @@ function App() {
         apiKey={API_KEY} 
         config={{
           model: "models/gemini-2.0-flash-exp",
-          tools: [noteTools.saveNote, noteTools.getNotes]
+          tools: noteTools
         }}
       >
         <div className="streaming-console">

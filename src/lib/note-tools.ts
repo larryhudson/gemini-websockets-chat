@@ -1,44 +1,55 @@
 /**
  * Tools for managing notes in localStorage
  */
+import { SchemaType, Tool } from "@google/generative-ai";
 
-export const noteTools = {
-  saveNote: {
-    name: "saveNote",
-    description: "Save a note to localStorage",
-    parameters: {
-      type: "object",
-      properties: {
-        content: {
-          type: "string",
-          description: "The content of the note to save",
+export const noteTools: Tool[] = [
+  {
+    functionDeclarations: [
+      {
+        name: "save_note",
+        description: "Save a note to localStorage",
+        parameters: {
+          type: SchemaType.OBJECT,
+          properties: {
+            content: {
+              type: SchemaType.STRING,
+              description: "The content of the note to save",
+            },
+          },
+          required: ["content"],
         },
       },
-      required: ["content"],
-    },
-    execute: async ({ content }: { content: string }) => {
+      {
+        name: "get_notes",
+        description: "Retrieve all saved notes from localStorage",
+        parameters: {
+          type: SchemaType.OBJECT,
+          properties: {},
+        },
+      },
+    ],
+  },
+];
+
+// Tool execution functions
+export const executeNoteTool = async (name: string, args: any) => {
+  switch (name) {
+    case "save_note":
       const notes = JSON.parse(localStorage.getItem("notes") || "[]");
       notes.push({
         id: Date.now(),
-        content,
+        content: args.content,
         timestamp: new Date().toISOString(),
       });
       localStorage.setItem("notes", JSON.stringify(notes));
-      return { success: true, message: "Note saved successfully" };
-    },
-  },
+      return { result: { success: true, message: "Note saved successfully" } };
 
-  getNotes: {
-    name: "getNotes",
-    description: "Retrieve all saved notes from localStorage",
-    parameters: {
-      type: "object",
-      properties: {},
-      required: [],
-    },
-    execute: async () => {
-      const notes = JSON.parse(localStorage.getItem("notes") || "[]");
-      return { notes };
-    },
-  },
+    case "get_notes":
+      const savedNotes = JSON.parse(localStorage.getItem("notes") || "[]");
+      return { result: { notes: savedNotes } };
+
+    default:
+      throw new Error(`Unknown tool: ${name}`);
+  }
 };
