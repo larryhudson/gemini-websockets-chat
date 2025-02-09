@@ -1,10 +1,10 @@
 /**
  * Component for managing notes using the Gemini API tools
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useLiveAPIContext } from "../../contexts/LiveAPIContext";
-import { ToolCall } from "../../multimodal-live-types";
-import { noteTools, SaveNoteArgs } from "../../lib/note-tools";
+import { ToolCall, ToolResponse } from "../../multimodal-live-types";
+import { toolObject, systemInstructionObject, SaveNoteArgs } from "../../lib/note-tools";
 
 interface NoteItem {
   id: number;
@@ -12,21 +12,24 @@ interface NoteItem {
   timestamp: string;
 }
 
-interface ResponseObject {
-  name: string;
-  response: { result: { [key: string]: any } };
-}
-
 export function Notes() {
   const { client, setConfig, connect, connected } = useLiveAPIContext();
   const [notes, setNotes] = useState<NoteItem[]>([]);
   const [isStarting, setIsStarting] = useState(false);
+  const [toolResponse, setToolResponse] = useState<ToolResponse | null>(null);
 
   // Set up the configuration with our note tools
   useEffect(() => {
     setConfig({
       model: "models/gemini-2.0-flash-exp",
-      tools: [noteTools],
+      generationConfig: {
+        responseModalities: "text",
+        speechConfig: {
+          voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } },
+        },
+      },
+      systemInstruction: systemInstructionObject,
+      tools: toolObject,
     });
   }, [setConfig]);
 
@@ -88,6 +91,7 @@ export function Notes() {
         };
       });
 
+      setToolResponse({ functionResponses });
       client.sendToolResponse({ functionResponses });
     };
 
@@ -118,13 +122,13 @@ export function Notes() {
       {notes.length === 0 ? (
         <p>No notes stored yet. Try asking me to remember something!</p>
       ) : (
-        <ul>
+        <ul className="notes-list">
           {notes.map((note) => (
-            <li key={note.id}>
-              <p>{note.content}</p>
-              <small>{new Date(note.timestamp).toLocaleString()}</small>
+            <li key={note.id} className="note-item">
+              <div className="note-content" dangerouslySetInnerHTML={{ __html: note.content }} />
+              <small className="note-timestamp">{new Date(note.timestamp).toLocaleString()}</small>
             </li>
-          ))}
+          ))}        
         </ul>
       )}
     </div>
