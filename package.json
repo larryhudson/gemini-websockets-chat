@@ -48,14 +48,9 @@
     "@types/node": "^16.18.119",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-<<<<<<< HEAD
     "@types/react-syntax-highlighter": "^15.5.13",
-||||||| 630a033
-    "@types/lodash": "^4.17.13",
-=======
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.3.4",
->>>>>>> migrate-to-vite
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
     "vite": "^6.1.0"
