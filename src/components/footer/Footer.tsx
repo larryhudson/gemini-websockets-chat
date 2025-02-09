@@ -19,7 +19,12 @@ const Footer = () => {
     <div className="text-center text-sm text-gray-400 mb-4">
       <p>
         Built with <br />
-        <a href="tbc" className="hover:text-gray-300 transition-colors">Multimodal Live API</a>
+        <a
+          href="https://ai.google.dev/gemini-api/docs/multimodal-live"
+          className="hover:text-gray-300 transition-colors"
+        >
+          Multimodal Live API
+        </a>
       </p>
     </div>
   );
