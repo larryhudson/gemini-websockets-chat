@@ -22,20 +22,15 @@ import ControlTray from './components/control-tray/ControlTray';
 import Footer from './components/footer/Footer';
 import { Notes } from './components/notes/Notes';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
-if (typeof API_KEY !== 'string') {
-  throw new Error('set VITE_GEMINI_API_KEY in .env');
-}
-
-const host = 'generativelanguage.googleapis.com';
-const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
+// Always connect through our proxy server
+const uri = `ws://${window.location.host}/ws`;
 
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   return (
     <div className="font-space-mono">
-      <LiveAPIProvider url={uri} apiKey={API_KEY}>
+      <LiveAPIProvider url={uri}>
         <div className="flex h-screen bg-neutral-5 text-gray-300">
           <SidePanel />
           <div className="flex-1 flex flex-col">

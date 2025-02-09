@@ -36,10 +36,9 @@ export type UseLiveAPIResults = {
 
 export function useLiveAPI({
   url,
-  apiKey,
   config: initialConfig,
 }: MultimodalLiveAPIClientConnection & { config?: LiveConfig }): UseLiveAPIResults {
-  const client = useMemo(() => new MultimodalLiveClient({ url, apiKey }), [url, apiKey]);
+  const client = useMemo(() => new MultimodalLiveClient({ url }), [url]);
   const audioStreamerRef = useRef<AudioStreamer | null>(null);
 
   const [connected, setConnected] = useState(false);

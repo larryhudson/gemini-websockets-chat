@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-
-
 import { useEffect, useRef } from 'react';
 import c from 'classnames';
 
@@ -45,7 +43,7 @@ export default function AudioPulse({ active, volume, hover }: AudioPulseProps) {
   }, [volume]);
 
   return (
-    <div 
+    <div
       className={c(
         'flex w-6 h-1 justify-evenly items-center transition-all duration-500',
         'transition-opacity duration-300',
@@ -53,9 +51,10 @@ export default function AudioPulse({ active, volume, hover }: AudioPulseProps) {
           'opacity-100': active,
           '[&>div]:bg-[var(--color-neutral-80)]': active,
           '[&>div]:bg-[var(--color-neutral-30)]': !active,
-          '[&>div]:animate-hover': hover
+          '[&>div]:animate-hover': hover,
         }
-      )}>
+      )}
+    >
       {Array(lineCount)
         .fill(null)
         .map((_, i) => (
@@ -63,10 +62,10 @@ export default function AudioPulse({ active, volume, hover }: AudioPulseProps) {
             key={i}
             ref={(el) => (lines.current[i] = el!)}
             className="w-1 min-h-1 rounded-[1000px] transition-[height] duration-100"
-            style={{ 
+            style={{
               animationDelay: `${i * 133}ms`,
-              height: '4px'
-            }
+              height: '4px',
+            }}
           />
         ))}
     </div>

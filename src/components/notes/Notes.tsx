@@ -25,7 +25,7 @@ export function Notes() {
       generationConfig: {
         responseModalities: 'audio',
         speechConfig: {
-          voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } },
+          voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } },
         },
       },
       systemInstruction: systemInstructionObject,

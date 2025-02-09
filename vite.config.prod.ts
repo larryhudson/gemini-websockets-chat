@@ -11,13 +11,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: {
-    port: 5173, // Default Vite port
-    proxy: {
-      '/ws': {
-        target: 'ws://localhost:3000',
-        ws: true,
-      }
-    }
+  build: {
+    outDir: 'dist/client',
+    emptyOutDir: true,
   },
 });
