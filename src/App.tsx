@@ -43,7 +43,13 @@ function App() {
               <Notes />
               <Footer />
             </div>
-            <ControlTray videoRef={videoRef} supportsVideo={false}>
+            <video
+              ref={videoRef}
+              style={{ display: 'none' }}
+              autoPlay
+              playsInline
+            />
+            <ControlTray videoRef={videoRef} supportsVideo={true}>
               {/* put your own buttons here */}
             </ControlTray>
           </main>
