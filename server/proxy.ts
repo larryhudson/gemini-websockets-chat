@@ -50,7 +50,7 @@ server.on('upgrade', (req, socket, head) => {
 });
 
 // Log before proxy request is made
-proxy.on('proxyReqWs', (proxyReq, req, socket, options, head) => {
+proxy.on('proxyReqWs', (proxyReq, req, _socket, options) => {
   console.log('Before Proxy Request:', {
     proxyReqUrl: proxyReq.path,
     proxyReqHeaders: proxyReq.getHeaders(),
@@ -68,7 +68,7 @@ proxy.on('error', (err, req, res) => {
     reqUrl: req.url,
     reqHeaders: req.headers,
   });
-  if (res.writeHead) {
+  if ('writeHead' in res && typeof res.writeHead === 'function') {
     res.writeHead(500, {
       'Content-Type': 'text/plain',
     });
@@ -89,7 +89,7 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 proxy.on('close', (req, socket, head) => {
   console.log('WebSocket Connection Closed:', {
     reqUrl: req?.url,
-    socketConnected: socket?.connected,
+    socketConnected: socket?.writable,
   });
 });
 
