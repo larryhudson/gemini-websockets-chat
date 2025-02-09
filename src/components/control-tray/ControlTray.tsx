@@ -24,7 +24,6 @@ import { useWebcam } from '../../hooks/use-webcam';
 import { AudioRecorder } from '../../lib/audio-recorder';
 import AudioPulse from '../audio-pulse/AudioPulse';
 
-
 export type ControlTrayProps = {
   videoRef: RefObject<HTMLVideoElement>;
   children?: ReactNode;
@@ -46,15 +45,15 @@ type MediaStreamButtonProps = {
 const MediaStreamButton = memo(
   ({ isStreaming, onIcon, offIcon, start, stop }: MediaStreamButtonProps) =>
     isStreaming ? (
-      <button 
-        className="p-2 rounded-full bg-neutral-15 hover:bg-neutral-20 text-gray-300 transition-colors" 
+      <button
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-neutral-15 hover:bg-neutral-20 text-gray-300 transition-colors"
         onClick={stop}
       >
         <span className="material-symbols-outlined">{onIcon}</span>
       </button>
     ) : (
-      <button 
-        className="p-2 rounded-full bg-neutral-15 hover:bg-neutral-20 text-gray-300 transition-colors" 
+      <button
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-neutral-15 hover:bg-neutral-20 text-gray-300 transition-colors"
         onClick={start}
       >
         <span className="material-symbols-outlined">{offIcon}</span>
@@ -163,21 +162,23 @@ function ControlTray({
   return (
     <section className="border-t border-gray-600 bg-neutral-5">
       <canvas className="hidden" ref={renderCanvasRef} />
-      <div className="flex items-center justify-between p-4">
-        <nav className={cn('flex items-center gap-4', { 'opacity-50 pointer-events-none': !connected })}>
-          <button 
-            className={cn('p-2 rounded-full transition-colors', {
+      <div className="flex items-center justify-between p-4 h-[72px]">
+        <nav
+          className={cn('flex items-center gap-4', {
+            'opacity-50 pointer-events-none': !connected,
+          })}
+        >
+          <button
+            className={cn('w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-full transition-colors', {
               'bg-blue-700 text-blue-400 hover:bg-blue-800': !muted,
-              'bg-neutral-15 text-gray-300 hover:bg-neutral-20': muted
-            })} 
+              'bg-neutral-15 text-gray-300 hover:bg-neutral-20': muted,
+            })}
             onClick={() => setMuted(!muted)}
           >
-            <span className="material-symbols-outlined filled">
-              {!muted ? 'mic' : 'mic_off'}
-            </span>
+            <span className="material-symbols-outlined filled">{!muted ? 'mic' : 'mic_off'}</span>
           </button>
 
-          <div className="p-2 rounded-full bg-neutral-15 text-gray-300">
+          <div className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-full bg-neutral-15 text-gray-300">
             <AudioPulse volume={volume} active={connected} hover={false} />
           </div>
 
@@ -205,9 +206,9 @@ function ControlTray({
         <div className="flex items-center gap-4">
           <button
             ref={connectButtonRef}
-            className={cn('p-2 rounded-full transition-colors', {
+            className={cn('w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-full transition-colors', {
               'bg-blue-700 text-blue-400 hover:bg-blue-800': connected,
-              'bg-neutral-15 text-gray-300 hover:bg-neutral-20': !connected
+              'bg-neutral-15 text-gray-300 hover:bg-neutral-20': !connected,
             })}
             onClick={connected ? disconnect : connect}
           >
@@ -215,9 +216,7 @@ function ControlTray({
               {connected ? 'pause' : 'play_arrow'}
             </span>
           </button>
-          {connected && (
-            <span className="text-gray-300">Streaming</span>
-          )}
+          {connected && <span className="text-gray-300">Streaming</span>}
         </div>
       </div>
     </section>

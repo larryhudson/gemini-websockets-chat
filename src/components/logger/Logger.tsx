@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import './logger.scss';
+
 
 import { Part } from '@google/generative-ai';
 import cn from 'classnames';
@@ -50,27 +50,30 @@ const LogEntry = ({
   MessageComponent: ({ message }: { message: StreamingLog['message'] }) => ReactNode;
 }): JSX.Element => (
   <li
-    className={cn(`plain-log`, `source-${log.type.slice(0, log.type.indexOf('.'))}`, {
-      receive: log.type.includes('receive'),
-      send: log.type.includes('send'),
+    className={cn('flex flex-col py-2 font-mono text-sm', {
+      'text-[var(--color-blue-500)]': log.type.includes('receive') || log.type.slice(0, log.type.indexOf('.')) === 'server',
+      'text-[var(--color-green-500)]': log.type.includes('send') || (log.type.slice(0, log.type.indexOf('.')) === 'client' && !log.type.includes('server')),
+      'text-[var(--color-neutral-50)]': !log.type.includes('receive') && !log.type.includes('send') && !['server', 'client'].includes(log.type.slice(0, log.type.indexOf('.')))
     })}
   >
-    <span className="timestamp">{formatTime(log.date)}</span>
-    <span className="source">{log.type}</span>
-    <span className="message">
+    <div className="flex gap-2 mb-1">
+      <span className="flex-shrink-0">{formatTime(log.date)}</span>
+      <span className="flex-shrink-0 font-bold">{log.type}</span>
+      {log.count && <span className="count">{log.count}</span>}
+    </div>
+    <div className="message pl-4">
       <MessageComponent message={log.message} />
-    </span>
-    {log.count && <span className="count">{log.count}</span>}
+    </div>
   </li>
 );
 
 const PlainTextMessage = ({ message }: { message: StreamingLog['message'] }) => (
-  <span>{message as string}</span>
+  <span className="break-words">{message as string}</span>
 );
 
 type Message = { message: StreamingLog['message'] };
 
-const AnyMessage = ({ message }: Message) => <pre>{JSON.stringify(message, null, '  ')}</pre>;
+const AnyMessage = ({ message }: Message) => <pre className="whitespace-pre-wrap break-words">{JSON.stringify(message, null, '  ')}</pre>;
 
 function tryParseCodeExecutionResult(output: string) {
   try {
@@ -83,32 +86,32 @@ function tryParseCodeExecutionResult(output: string) {
 
 const RenderPart = ({ part }: { part: Part }) =>
   part.text && part.text.length ? (
-    <p className="part part-text">{part.text}</p>
+    <p className="bg-neutral-5 p-3.5 mb-1 text-neutral-90 rounded-lg">{part.text}</p>
   ) : part.executableCode ? (
-    <div className="part part-executableCode">
-      <h5>executableCode: {part.executableCode.language}</h5>
+    <div className="bg-neutral-5 p-3.5 mb-1 text-neutral-90 rounded-lg">
+      <h5 className="m-0 pb-2 border-b border-neutral-20">executableCode: {part.executableCode.language}</h5>
       <SyntaxHighlighter language={part.executableCode.language.toLowerCase()} style={dark}>
         {part.executableCode.code}
       </SyntaxHighlighter>
     </div>
   ) : part.codeExecutionResult ? (
-    <div className="part part-codeExecutionResult">
-      <h5>codeExecutionResult: {part.codeExecutionResult.outcome}</h5>
+    <div className="bg-neutral-5 p-3.5 mb-1 text-neutral-90 rounded-lg">
+      <h5 className="m-0 pb-2 border-b border-neutral-20">codeExecutionResult: {part.codeExecutionResult.outcome}</h5>
       <SyntaxHighlighter language="json" style={dark}>
         {tryParseCodeExecutionResult(part.codeExecutionResult.output)}
       </SyntaxHighlighter>
     </div>
   ) : (
-    <div className="part part-inlinedata">
-      <h5>Inline Data: {part.inlineData?.mimeType}</h5>
+    <div className="bg-neutral-5 p-3.5 mb-1 text-neutral-90 rounded-lg">
+      <h5 className="m-0 pb-2 border-b border-neutral-20">Inline Data: {part.inlineData?.mimeType}</h5>
     </div>
   );
 
 const ClientContentLog = ({ message }: Message) => {
   const { turns, turnComplete } = (message as ClientContentMessage).clientContent;
   return (
-    <div className="rich-log client-content user">
-      <h4 className="roler-user">User</h4>
+    <div className="flex flex-col gap-1">
+      <h4 className="text-sm uppercase py-2 m-0 text-[var(--color-green-500)]">User</h4>
       {turns.map((turn, i) => (
         <div key={`message-turn-${i}`}>
           {turn.parts
@@ -126,9 +129,10 @@ const ClientContentLog = ({ message }: Message) => {
 const ToolCallLog = ({ message }: Message) => {
   const { toolCall } = message as ToolCallMessage;
   return (
-    <div className={cn('rich-log tool-call')}>
+    <div className="flex flex-col gap-1">
+      <h4 className="text-sm uppercase py-2 m-0">Tool Call</h4>
       {toolCall.functionCalls.map((fc) => (
-        <div key={fc.id} className="part part-functioncall">
+        <div key={fc.id} className="bg-neutral-5 p-3.5 mb-1 text-neutral-90 rounded-lg">
           <h5>Function call: {fc.name}</h5>
           <SyntaxHighlighter language="json" style={dark}>
             {JSON.stringify(fc, null, '  ')}
@@ -140,12 +144,13 @@ const ToolCallLog = ({ message }: Message) => {
 };
 
 const ToolCallCancellationLog = ({ message }: Message): JSX.Element => (
-  <div className={cn('rich-log tool-call-cancellation')}>
-    <span>
+  <div className="flex flex-col gap-1">
+    <h4 className="text-sm uppercase py-2 m-0">Tool Call Cancelled</h4>
+    <span className="bg-neutral-5 p-3.5 mb-1 text-neutral-90 rounded-lg">
       {' '}
       ids:{' '}
       {(message as ToolCallCancellationMessage).toolCallCancellation.ids.map((id) => (
-        <span className="inline-code" key={`cancel-${id}`}>
+        <span className="italic last:after:content-none after:content-[',_']" key={`cancel-${id}`}>
           &quot;{id}&quot;
         </span>
       ))}
@@ -154,9 +159,10 @@ const ToolCallCancellationLog = ({ message }: Message): JSX.Element => (
 );
 
 const ToolResponseLog = ({ message }: Message): JSX.Element => (
-  <div className={cn('rich-log tool-response')}>
+  <div className="flex flex-col gap-1">
+    <h4 className="text-sm uppercase py-2 m-0">Tool Response</h4>
     {(message as ToolResponseMessage).toolResponse.functionResponses.map((fc) => (
-      <div key={`tool-response-${fc.id}`} className="part">
+      <div key={`tool-response-${fc.id}`} className="bg-neutral-5 p-3.5 mb-1 text-neutral-90 rounded-lg">
         <h5>Function Response: {fc.id}</h5>
         <SyntaxHighlighter language="json" style={dark}>
           {JSON.stringify(fc.response, null, '  ')}
@@ -172,8 +178,8 @@ const ModelTurnLog = ({ message }: Message): JSX.Element => {
   const { parts } = modelTurn;
 
   return (
-    <div className="rich-log model-turn model">
-      <h4 className="role-model">Model</h4>
+    <div className="flex flex-col gap-1">
+      <h4 className="text-sm uppercase py-2 m-0 text-[var(--color-blue-500)]">Model {isInterrupted(message) ? '(interrupted)' : isTurnComplete(message) ? '(complete)' : '(incomplete)'}</h4>
       {parts
         .filter((part) => !(part.text && part.text === '\n'))
         .map((part, j) => (
@@ -238,8 +244,8 @@ export default function Logger({ filter = 'none' }: LoggerProps) {
   const filterFn = filters[filter];
 
   return (
-    <div className="logger">
-      <ul className="logger-list">
+    <div className="text-gray-300 w-full max-w-full block">
+      <ul className="pl-2 pr-2 overflow-x-hidden w-full">
         {logs.filter(filterFn).map((log, key) => {
           return <LogEntry MessageComponent={component(log)} log={log} key={key} />;
         })}

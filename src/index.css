@@ -42,7 +42,7 @@
   --color-red-700: #bd3000;
 
   /* Font Family */
-  --font-space-mono: "Space Mono", monospace;
+  --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 /* Typography styles */
@@ -70,32 +70,31 @@
 /* Base styles */
 @layer base {
   body {
-    font-family: var(--font-space-mono);
-    background: var(--color-neutral-30);
+    font-family: var(--font-system); background: var(--color-neutral-30);
   }
 }
 
 /* Custom utilities */
 @utility space-mono-regular {
-  font-family: var(--font-space-mono);
+  font-family: var(--font-system);
   font-weight: 400;
   font-style: normal;
 }
 
 @utility space-mono-bold {
-  font-family: var(--font-space-mono);
+  font-family: var(--font-system);
   font-weight: 700;
   font-style: normal;
 }
 
 @utility space-mono-regular-italic {
-  font-family: var(--font-space-mono);
+  font-family: var(--font-system);
   font-weight: 400;
   font-style: italic;
 }
 
 @utility space-mono-bold-italic {
-  font-family: var(--font-space-mono);
+  font-family: var(--font-system);
   font-weight: 700;
   font-style: italic;
 }
