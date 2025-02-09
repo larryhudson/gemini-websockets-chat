@@ -3,53 +3,79 @@
  */
 import { SchemaType, Tool } from "@google/generative-ai";
 
-export const noteTools: Tool[] = [
-  {
-    functionDeclarations: [
-      {
-        name: "save_note",
-        description: "Save a note to localStorage",
-        parameters: {
-          type: SchemaType.OBJECT,
-          properties: {
-            content: {
-              type: SchemaType.STRING,
-              description: "The content of the note to save",
-            },
-          },
-          required: ["content"],
-        },
-      },
-      {
-        name: "get_notes",
-        description: "Retrieve all saved notes from localStorage",
-        parameters: {
-          type: SchemaType.OBJECT,
-          properties: {},
-        },
-      },
-    ],
-  },
-];
+// Types
+export interface SaveNoteArgs {
+  content: string;
+}
 
-// Tool execution functions
-export const executeNoteTool = async (name: string, args: any) => {
-  switch (name) {
-    case "save_note":
-      const notes = JSON.parse(localStorage.getItem("notes") || "[]");
-      notes.push({
+interface NoteItem {
+  id: number;
+  content: string;
+  timestamp: string;
+}
+
+interface ResponseObject {
+  name: string;
+  response: { result: { [key: string]: any } };
+}
+
+// Tool declaration
+export const noteTools: Tool = {
+  functionDeclarations: [
+    {
+      name: "save_note",
+      description: "Save a note to localStorage",
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          content: {
+            type: SchemaType.STRING,
+            description: "The content of the note to save",
+          },
+        },
+        required: ["content"],
+      },
+    },
+    {
+      name: "get_notes",
+      description: "Retrieve all saved notes from localStorage",
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {},
+      },
+    },
+  ],
+};
+
+// Tool execution function
+export const executeNoteTool = (toolCall: { name: string; args: any }): ResponseObject => {
+  let response = { result: {} };
+
+  switch (toolCall.name) {
+    case "save_note": {
+      const args = toolCall.args as SaveNoteArgs;
+      const notes: NoteItem[] = JSON.parse(localStorage.getItem("notes") || "[]");
+      const newNote: NoteItem = {
         id: Date.now(),
         content: args.content,
         timestamp: new Date().toISOString(),
-      });
+      };
+      notes.push(newNote);
       localStorage.setItem("notes", JSON.stringify(notes));
-      return { result: { success: true, message: "Note saved successfully" } };
-
-    case "get_notes":
-      const savedNotes = JSON.parse(localStorage.getItem("notes") || "[]");
-      return { result: { notes: savedNotes } };
-
+      response.result = { success: true, message: "Note saved successfully" };
+      break;
+    }
+    case "get_notes": {
+      const notes: NoteItem[] = JSON.parse(localStorage.getItem("notes") || "[]");
+      response.result = { notes };
+      break;
+    }
     default:
-      throw new Error(`Unknown tool: ${name}`);
+      throw new Error(`Unknown tool: ${toolCall.name}`);
   }
+
+  return {
+    name: toolCall.name,
+    response,
+  };
 };

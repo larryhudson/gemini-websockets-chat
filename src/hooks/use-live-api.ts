@@ -19,11 +19,10 @@ import {
   MultimodalLiveAPIClientConnection,
   MultimodalLiveClient,
 } from "../lib/multimodal-live-client";
-import { LiveConfig, ToolCall } from "../multimodal-live-types";
+import { LiveConfig } from "../multimodal-live-types";
 import { AudioStreamer } from "../lib/audio-streamer";
 import { audioContext } from "../lib/utils";
 import VolMeterWorket from "../lib/worklets/vol-meter";
-import { executeNoteTool } from "../lib/note-tools";
 
 export type UseLiveAPIResults = {
   client: MultimodalLiveClient;
@@ -78,28 +77,16 @@ export function useLiveAPI({
     const onAudio = (data: ArrayBuffer) =>
       audioStreamerRef.current?.addPCM16(new Uint8Array(data));
 
-    const onToolCall = async (toolCall: ToolCall) => {
-      const responses = await Promise.all(
-        toolCall.functionCalls.map(async (call) => {
-          const response = await executeNoteTool(call.name, call.args);
-          return { ...response, name: call.name, id: call.id };
-        })
-      );
-      client.sendToolResponse({ functionResponses: responses });
-    };
-
     client
       .on("close", onClose)
       .on("interrupted", stopAudioStreamer)
-      .on("audio", onAudio)
-      .on("toolCall", onToolCall);
+      .on("audio", onAudio);
 
     return () => {
       client
         .off("close", onClose)
         .off("interrupted", stopAudioStreamer)
-        .off("audio", onAudio)
-        .off("toolCall", onToolCall);
+        .off("audio", onAudio);
     };
   }, [client]);
 

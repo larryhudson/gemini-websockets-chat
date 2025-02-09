@@ -19,9 +19,8 @@ import "./App.scss";
 import { LiveAPIProvider } from "./contexts/LiveAPIContext";
 import SidePanel from "./components/side-panel/SidePanel";
 import ControlTray from "./components/control-tray/ControlTray";
-import ExplainerPicker from "./components/explainer-picker/ExplainerPicker";
 import Footer from "./components/footer/Footer";
-import { noteTools } from "./lib/note-tools";
+import { Notes } from "./components/notes/Notes";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
 if (typeof API_KEY !== "string") {
@@ -38,17 +37,13 @@ function App() {
     <div className="App">
       <LiveAPIProvider 
         url={uri} 
-        apiKey={API_KEY} 
-        config={{
-          model: "models/gemini-2.0-flash-exp",
-          tools: noteTools
-        }}
+        apiKey={API_KEY}
       >
         <div className="streaming-console">
           <SidePanel />
           <main>
             <div className="main-app-area">
-              <ExplainerPicker />
+              <Notes />
               <Footer />
             </div>
             <ControlTray videoRef={videoRef} supportsVideo={false}>
